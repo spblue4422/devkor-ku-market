@@ -1,17 +1,26 @@
 package com.spblue4422.kumarket.posts;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.spblue4422.kumarket.users.User;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
+@Getter
+@Builder
+@Entity(name="TB_Post")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Post {
 	@Id()
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "postId")
 	private Long postId;
 
+	@ManyToOne()
+	@JoinColumn(name="post_user")
+	private User user;
+	//enum
 	@Column(name="category")
 	@NotNull()
 	private String category;
@@ -27,4 +36,14 @@ public class Post {
 	@Column(name="thumbnailUrl")
 	@NotNull()
 	private String thumbnailUrl;
+
+	@Column(name = "price")
+	private Integer price;
+
+	@Column(name = "viewCount")
+	private Integer viewCount;
+
+	//enum
+	@Column(name = "status")
+	private String status;
 }
