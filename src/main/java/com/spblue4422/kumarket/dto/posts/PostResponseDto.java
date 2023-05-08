@@ -1,5 +1,9 @@
 package com.spblue4422.kumarket.dto.posts;
 
+import lombok.*;
+
+@Getter
+@Builder
 public class PostResponseDto {
 	private Long postId;
 	private String category;
@@ -12,5 +16,5 @@ public class PostResponseDto {
 	//userInfo
 	private Long userId;
 	private String userName;
-	private String likes;
+	private Integer likes;
 }

@@ -1,5 +1,7 @@
 package com.spblue4422.kumarket.posts;
 
+import com.spblue4422.kumarket.dto.posts.PostListItemDto;
+import com.spblue4422.kumarket.dto.posts.PostResponseDto;
 import com.spblue4422.kumarket.users.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -46,4 +48,29 @@ public class Post {
 	//enum
 	@Column(name = "status")
 	private String status;
+
+	public PostResponseDto toPostResponseDto() {
+		return PostResponseDto
+				.builder()
+				.postId(postId)
+				.category(category)
+				.title(title)
+				.thumbnailUrl(thumbnailUrl)
+				.price(price)
+				.viewCount(viewCount)
+				.userId(user.getUserId())
+				.userName(user.getUserName())
+				.likes(user.getLikes())
+				.build();
+	}
+
+	public PostListItemDto toPostListItemDto() {
+		return PostListItemDto
+				.builder()
+				.postId(postId)
+				.category(category)
+				.title(title)
+				.thumbnailUrl(thumbnailUrl)
+				.build();
+	}
 }
