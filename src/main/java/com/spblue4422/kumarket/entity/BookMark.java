@@ -1,9 +1,6 @@
-package com.spblue4422.kumarket.posts.bookmarks;
+package com.spblue4422.kumarket.entity;
 
-import com.spblue4422.kumarket.posts.Post;
-import com.spblue4422.kumarket.users.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter

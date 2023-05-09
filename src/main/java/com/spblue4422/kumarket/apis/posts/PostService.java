@@ -1,10 +1,10 @@
-package com.spblue4422.kumarket.posts;
+package com.spblue4422.kumarket.apis.posts;
 
+import com.spblue4422.kumarket.dto.posts.CreatePostRequestDto;
 import com.spblue4422.kumarket.dto.posts.PostListItemDto;
 import com.spblue4422.kumarket.dto.posts.PostListResponseDto;
 import com.spblue4422.kumarket.dto.posts.PostResponseDto;
-import com.spblue4422.kumarket.users.User;
-import com.spblue4422.kumarket.users.UserRepository;
+import com.spblue4422.kumarket.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +13,11 @@ import java.util.List;
 
 @Service
 public class PostService {
-	private final UserRepository userRepository;
 	private final PostRepository postRepository;
 
 	@Autowired
-	public PostService(PostRepository postRepository, UserRepository userRepository) {
+	public PostService(PostRepository postRepository) {
 		this.postRepository = postRepository;
-		this.userRepository = userRepository;
 	}
 
 	public PostListResponseDto findAllPosts() {
@@ -38,9 +36,19 @@ public class PostService {
 	}
 
 	public PostResponseDto findPostByPostId(Long postId) {
-		Post postData = this.postRepository.findById(postId).orElse(null);
+		Post postData = this.postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
 
 		return postData.toPostResponseDto();
+	}
+
+	public void createPost(CreatePostRequestDto req) {
+		return ;
+	}
+	public void updatePost() {
+		return ;
+	}
+	public void removePost() {
+		return ;
 	}
 
 }

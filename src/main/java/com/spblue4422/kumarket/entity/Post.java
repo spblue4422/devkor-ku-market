@@ -1,12 +1,10 @@
-package com.spblue4422.kumarket.posts;
+package com.spblue4422.kumarket.entity;
 
 import com.spblue4422.kumarket.dto.posts.PostListItemDto;
 import com.spblue4422.kumarket.dto.posts.PostResponseDto;
-import com.spblue4422.kumarket.users.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Builder

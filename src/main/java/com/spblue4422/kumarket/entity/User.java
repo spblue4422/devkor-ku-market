@@ -1,5 +1,7 @@
-package com.spblue4422.kumarket.users;
+package com.spblue4422.kumarket.entity;
 
+import com.spblue4422.kumarket.dto.users.MyProfileResponseDto;
+import com.spblue4422.kumarket.dto.users.UserProfileResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -35,4 +37,22 @@ public class User {
 	@NotNull()
 	private Integer likes;
 
+	public UserProfileResponseDto toUserProfileResponseDto() {
+		return UserProfileResponseDto
+				.builder()
+				.userId(userId)
+				.userName(userName)
+				.likes(likes)
+				.build();
+	}
+
+	public MyProfileResponseDto toMyProfileResponseDto() {
+		return MyProfileResponseDto
+				.builder()
+				.userId(userId)
+				.userName(userName)
+				.phoneNum(phoneNum)
+				.likes(likes)
+				.build();
+	}
 }

@@ -1,6 +1,6 @@
-package com.spblue4422.kumarket.posts.photos;
+package com.spblue4422.kumarket.entity;
 
-import com.spblue4422.kumarket.posts.Post;
+import com.spblue4422.kumarket.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
 
