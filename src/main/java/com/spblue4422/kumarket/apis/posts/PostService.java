@@ -47,7 +47,7 @@ public class PostService {
 	public void updatePost() {
 		return ;
 	}
-	public void removePost() {
+	public void deletePost() {
 		return ;
 	}
 

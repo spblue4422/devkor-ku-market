@@ -52,6 +52,7 @@ public class PostController {
 	@PatchMapping("/modfiy")
 	public BasicResponseDto modifyPost() {
 		try {
+			postService.updatePost();
 			return BasicResponseDto.makeRes(null, 200, "success");
 		} catch(Exception ex) {
 			return BasicResponseDto.makeRes(null, 500, ex.getMessage());
@@ -61,6 +62,7 @@ public class PostController {
 	@DeleteMapping("/delete/:postId")
 	public BasicResponseDto removePost(@RequestParam("postId") Long postId) {
 		try {
+			postService.deletePost();
 			return BasicResponseDto.makeRes(null, 200, "success");
 		} catch(Exception ex) {
 			return BasicResponseDto.makeRes(null, 500, ex.getMessage());
