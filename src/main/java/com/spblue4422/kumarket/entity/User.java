@@ -2,20 +2,22 @@ package com.spblue4422.kumarket.entity;
 
 import com.spblue4422.kumarket.dto.users.MyProfileResponseDto;
 import com.spblue4422.kumarket.dto.users.UserProfileResponseDto;
+import com.spblue4422.kumarket.entity.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
+import java.util.List;
+
 @Getter
-@Builder
-//@SuperBuilder
+@SuperBuilder
 @SQLDelete(sql = "UPDATE tb_user SET deletedAt = now() where userId = ? and deletedAt is null")
 @Entity(name="TB_User")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity {
 	@Id()
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "userId")
@@ -36,6 +38,9 @@ public class User {
 	@Column(name="likes")
 	@NotNull()
 	private Integer likes;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<Bookmark> bookmarkList;
 
 	public UserProfileResponseDto toUserProfileResponseDto() {
 		return UserProfileResponseDto

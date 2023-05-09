@@ -1,4 +1,4 @@
-package com.spblue4422.kumarket.posts.photos;
+package com.spblue4422.kumarket.apis.posts.photos;
 
 import com.spblue4422.kumarket.entity.PostPhoto;
 import org.springframework.data.jpa.repository.JpaRepository;

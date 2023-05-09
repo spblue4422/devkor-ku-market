@@ -1,14 +1,16 @@
 package com.spblue4422.kumarket.entity;
 
+import com.spblue4422.kumarket.entity.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
+@SuperBuilder
 @Entity(name="TB_Bookmark")
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookMark {
+public class Bookmark extends BaseEntity {
 	@Id()
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="bookmarkId")

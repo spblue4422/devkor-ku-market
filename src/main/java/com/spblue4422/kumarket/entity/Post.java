@@ -2,16 +2,20 @@ package com.spblue4422.kumarket.entity;
 
 import com.spblue4422.kumarket.dto.posts.PostListItemDto;
 import com.spblue4422.kumarket.dto.posts.PostResponseDto;
+import com.spblue4422.kumarket.entity.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Getter
-@Builder
+@SuperBuilder
 @Entity(name="TB_Post")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
+public class Post extends BaseEntity {
 	@Id()
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "postId")
@@ -34,18 +38,34 @@ public class Post {
 	private String description;
 
 	@Column(name="thumbnailUrl")
-	@NotNull()
 	private String thumbnailUrl;
 
 	@Column(name = "price")
+	@NotNull()
 	private Integer price;
 
 	@Column(name = "viewCount")
+	@NotNull()
 	private Integer viewCount;
 
 	//enum
 	@Column(name = "status")
 	private String status;
+
+	@OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<PostPhoto> postPhotoList;
+
+	public void setThumbnailUrl(String url) {
+		this.thumbnailUrl = url;
+	}
+
+	public void raiseViewCount() {
+		this.viewCount = viewCount + 1;
+	}
+
+	public void addPhotoToList(PostPhoto photo) {
+		this.postPhotoList.add(photo);
+	}
 
 	public PostResponseDto toPostResponseDto() {
 		return PostResponseDto

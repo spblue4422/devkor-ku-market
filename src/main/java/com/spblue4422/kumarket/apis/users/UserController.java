@@ -19,7 +19,7 @@ public class UserController {
 	@GetMapping("/my")
 	public BasicResponseDto getMyProfile(Long userId) {
 		try {
-			MyProfileResponseDto resData = userService.findMyProfile(userId);
+			MyProfileResponseDto resData = userService.getMyProfile(userId);
 
 			return BasicResponseDto.makeRes(resData, 200, "success");
 		} catch	(Exception ex) {
@@ -27,10 +27,10 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/:userId")
+	@GetMapping("/{userId}")
 	public BasicResponseDto getOthersProfile(@RequestParam("userId") Long userId) {
 		try {
-			UserProfileResponseDto resData = userService.findOthersProfile(userId);
+			UserProfileResponseDto resData = userService.getOthersProfile(userId);
 
 			return BasicResponseDto.makeRes(resData, 200, "success");
 		} catch	(Exception ex) {

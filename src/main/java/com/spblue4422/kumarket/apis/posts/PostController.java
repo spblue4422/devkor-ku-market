@@ -1,11 +1,14 @@
 package com.spblue4422.kumarket.apis.posts;
 
-import com.spblue4422.kumarket.dto.BasicResponseDto;
-import com.spblue4422.kumarket.dto.posts.CreatePostRequestDto;
+import com.spblue4422.kumarket.dto.posts.SavePostRequestDto;
 import com.spblue4422.kumarket.dto.posts.PostListResponseDto;
 import com.spblue4422.kumarket.dto.posts.PostResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController("/posts")
 public class PostController {
@@ -17,55 +20,55 @@ public class PostController {
 	}
 
 	@GetMapping("")
-	public BasicResponseDto getAllPosts() {
+	public ResponseEntity<?> getAllPosts() {
 		try {
 			PostListResponseDto resData = postService.findAllPosts();
 
-			return BasicResponseDto.makeRes(resData, 200, "success");
+			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
-			return BasicResponseDto.makeRes(null, 500, ex.getMessage());
+			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 
-	@GetMapping("/:postId")
-	public BasicResponseDto getPostByPostId(@RequestParam("postId") Long postId) {
+	@GetMapping("/{postId}")
+	public ResponseEntity<?> getPostByPostId(@RequestParam("postId") Long postId) {
 		try{
-			PostResponseDto resData = postService.findPostByPostId(postId);
+			PostResponseDto resData = postService.getPostDetail(postId);
 
-			return BasicResponseDto.makeRes(resData, 200, "success");
+			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
-			return BasicResponseDto.makeRes(null, 500, ex.getMessage());
+			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 
 	@PostMapping("/add")
-	public BasicResponseDto addPost(@RequestBody() CreatePostRequestDto req) {
+	public ResponseEntity<?> addPost(@RequestPart(value = "postData") SavePostRequestDto req, @RequestPart(value = "images") List<MultipartFile> images) {
 		try {
-			postService.createPost(req);
+			Long resData = postService.insertPost(req, images, "spblue4422");
 
-			return BasicResponseDto.makeRes(null, 200, "success");
+			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
-			return BasicResponseDto.makeRes(null, 500, ex.getMessage());
+			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 
-	@PatchMapping("/modfiy")
-	public BasicResponseDto modifyPost() {
+	@PatchMapping("/modify/{postId}")
+	public ResponseEntity<?> modifyPost(@RequestPart(value = "postId") Long postId, @RequestPart(value = "postData") SavePostRequestDto req, @RequestPart(value = "images") List<MultipartFile> images) {
 		try {
-			postService.updatePost();
-			return BasicResponseDto.makeRes(null, 200, "success");
+			postService.updatePost(postId, req, images, "spblue4422");
+			return ResponseEntity.ok().body(null);
 		} catch(Exception ex) {
-			return BasicResponseDto.makeRes(null, 500, ex.getMessage());
+			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 
-	@DeleteMapping("/delete/:postId")
-	public BasicResponseDto removePost(@RequestParam("postId") Long postId) {
+	@DeleteMapping("/delete/{postId}")
+	public ResponseEntity<?> removePost(@RequestParam("postId") Long postId) {
 		try {
-			postService.deletePost();
-			return BasicResponseDto.makeRes(null, 200, "success");
+			postService.deletePost(postId, "spblue4422");
+			return ResponseEntity.ok().body(null);
 		} catch(Exception ex) {
-			return BasicResponseDto.makeRes(null, 500, ex.getMessage());
+			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 }

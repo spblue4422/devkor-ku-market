@@ -15,15 +15,23 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public MyProfileResponseDto findMyProfile(Long userId) {
+	public MyProfileResponseDto getMyProfile(Long userId) {
 		User userData = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
 
 		return userData.toMyProfileResponseDto();
 	}
 
-	public UserProfileResponseDto findOthersProfile(Long userId) {
+	public UserProfileResponseDto getOthersProfile(Long userId) {
 		User userData = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
 
 		return userData.toUserProfileResponseDto();
+	}
+
+	public User findUserByUserId(Long userId) {
+		return userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
+	}
+
+	public User findUserByUserName(String userName) {
+		return userRepository.findUserByUserNameEquals(userName).orElseThrow(() -> new RuntimeException());
 	}
 }
