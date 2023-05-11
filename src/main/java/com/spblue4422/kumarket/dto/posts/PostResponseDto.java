@@ -1,6 +1,9 @@
 package com.spblue4422.kumarket.dto.posts;
 
+import com.spblue4422.kumarket.entity.PostPhoto;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -12,6 +15,7 @@ public class PostResponseDto {
 	private String thumbnailUrl;
 	private Integer price;
 	private Integer viewCount;
+	private List<PostPhoto> postPhotoList;
 
 	//userInfo
 	private Long userId;

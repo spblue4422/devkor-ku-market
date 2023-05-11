@@ -55,7 +55,8 @@ public class PostController {
 	@PatchMapping("/modify/{postId}")
 	public ResponseEntity<?> modifyPost(@RequestPart(value = "postId") Long postId, @RequestPart(value = "postData") SavePostRequestDto req, @RequestPart(value = "images") List<MultipartFile> images) {
 		try {
-			postService.updatePost(postId, req, images, "spblue4422");
+			Long resData = postService.updatePost(postId, req, images, "spblue4422");
+
 			return ResponseEntity.ok().body(null);
 		} catch(Exception ex) {
 			return ResponseEntity.internalServerError().body(ex.getMessage());
@@ -65,7 +66,8 @@ public class PostController {
 	@DeleteMapping("/delete/{postId}")
 	public ResponseEntity<?> removePost(@RequestParam("postId") Long postId) {
 		try {
-			postService.deletePost(postId, "spblue4422");
+			Long resData = postService.deletePost(postId, "spblue4422");
+
 			return ResponseEntity.ok().body(null);
 		} catch(Exception ex) {
 			return ResponseEntity.internalServerError().body(ex.getMessage());

@@ -34,4 +34,8 @@ public class UserService {
 	public User findUserByUserName(String userName) {
 		return userRepository.findUserByUserNameEquals(userName).orElseThrow(() -> new RuntimeException());
 	}
+
+	public Boolean isUserExistsByUserName(String userName) {
+		return userRepository.existsUserByUserNameEquals(userName);
+	}
 }

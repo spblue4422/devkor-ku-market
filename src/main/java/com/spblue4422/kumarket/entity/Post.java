@@ -1,5 +1,7 @@
 package com.spblue4422.kumarket.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.spblue4422.kumarket.dto.posts.PostListItemDto;
 import com.spblue4422.kumarket.dto.posts.PostResponseDto;
 import com.spblue4422.kumarket.entity.common.BaseEntity;
@@ -7,21 +9,24 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 
 @Getter
 @SuperBuilder
+@SQLDelete(sql = "UPDATE tb_post SET deletedAt = now() where postId = ? and deletedAt is null")
 @Entity(name="TB_Post")
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Post extends BaseEntity {
 	@Id()
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "postId")
 	private Long postId;
 
-	@ManyToOne()
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="post_user")
 	private User user;
 	//enum
@@ -67,6 +72,11 @@ public class Post extends BaseEntity {
 		this.postPhotoList.add(photo);
 	}
 
+	public void emptyPhotoList() {
+//		this.thumbnailUrl = null;
+		this.postPhotoList.clear();
+	}
+
 	public PostResponseDto toPostResponseDto() {
 		return PostResponseDto
 				.builder()
@@ -76,6 +86,7 @@ public class Post extends BaseEntity {
 				.thumbnailUrl(thumbnailUrl)
 				.price(price)
 				.viewCount(viewCount)
+				.postPhotoList(postPhotoList)
 				.userId(user.getUserId())
 				.userName(user.getUserName())
 				.likes(user.getLikes())

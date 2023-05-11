@@ -32,4 +32,8 @@ public class PostPhotoService {
 
 		return this.postPhotoRepository.save(photoData);
 	}
+
+	public void deletePostPhoto(PostPhoto photo) {
+		this.postPhotoRepository.deleteById(photo.getPostPhotoId());
+	}
 }

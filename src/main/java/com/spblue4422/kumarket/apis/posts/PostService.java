@@ -55,7 +55,7 @@ public class PostService {
 		Post postData = postRepository.save(req.toInsertPostEntity(userData));
 
 		for(MultipartFile photo: photos) {
-			PostPhoto photoData = postPhotoService.insertPostPhoto(photo, postData, photos.indexOf(photo) + 1);
+			PostPhoto photoData = postPhotoService.insertPostPhoto(photo, postData, photos.indexOf(photo));
 			postData.addPhotoToList(photoData);
 
 			if(photos.indexOf(photo) == 0) {
@@ -66,23 +66,52 @@ public class PostService {
 		return postRepository.save(postData).getPostId();
 	}
 
-	public void updatePost(Long postId, SavePostRequestDto req, List<MultipartFile> photos, String userName) throws IOException {
-		User userData = userService.findUserByUserName(userName);
-		Post postData = findPostByPostId(postId);
+	public Long updatePost(Long postId, SavePostRequestDto req, List<MultipartFile> photos, String userName) throws IOException {
+		Post prevPostData = findPostByPostId(postId);
 
-		for(MultipartFile photo: photos) {
-
+		if(!prevPostData.getUser().getUserName().equals(userName)) {
+			throw new RuntimeException("본인의 게시물이 아님");
 		}
 
-		return ;
+		Post postData = req.toUpdatePostEntity(prevPostData);
+
+		for (PostPhoto postPhoto: postData.getPostPhotoList())
+		{
+			postPhotoService.deletePostPhoto(postPhoto);
+		}
+
+		postData.emptyPhotoList();
+
+		for(MultipartFile photo: photos) {
+			PostPhoto photoData = postPhotoService.insertPostPhoto(photo, postData, photos.indexOf(photo));
+			postData.addPhotoToList(photoData);
+
+			if(photos.indexOf(photo) == 0) {
+				postData.setThumbnailUrl(photoData.getSavedPath());
+			}
+		}
+
+		return postRepository.save(postData).getPostId();
 	}
 
-	public void deletePost(Long postId, String userName) {
-		User userData = userService.findUserByUserName(userName);
-		return ;
+	public Long deletePost(Long postId, String userName) {
+		Post postData = findPostByPostId(postId);
+
+		if(!postData.getUser().getUserName().equals(userName)) {
+			throw new RuntimeException("본인의 게시물이 아님");
+		}
+
+		postRepository.delete(postData);
+
+		return postId;
 	}
 
 	public Post findPostByPostId(Long postId) {
-		return this.postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
+		return postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
+	}
+
+	public Boolean isPostExistsByPostId(Long postId) {
+		//deletedat 구별해줄려나??
+		return postRepository.existsById(postId);
 	}
 }

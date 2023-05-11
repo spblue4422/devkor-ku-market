@@ -4,6 +4,8 @@ import com.spblue4422.kumarket.entity.Post;
 import com.spblue4422.kumarket.entity.User;
 import lombok.*;
 
+import java.util.ArrayList;
+
 @Getter
 @Builder
 public class SavePostRequestDto {
@@ -23,17 +25,18 @@ public class SavePostRequestDto {
 				.price(price)
 				.viewCount(0)
 				.status("")
-				.postPhotoList(null)
+				.postPhotoList(new ArrayList<>())
 				.build();
 	}
 
 	public Post toUpdatePostEntity(Post prevPost) {
 		return Post.builder()
 				.postId(prevPost.getPostId())
+				.user(prevPost.getUser())
 				.category(category)
 				.title(title)
 				.description(description)
-				.thumbnailUrl(prevPost.getThumbnailUrl())
+				.thumbnailUrl(null)
 				.price(price)
 				.viewCount(prevPost.getViewCount())
 				.status("")
