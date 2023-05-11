@@ -1,7 +1,6 @@
 package com.spblue4422.kumarket.apis.posts;
 
 import com.spblue4422.kumarket.apis.posts.photos.PostPhotoService;
-import com.spblue4422.kumarket.apis.users.UserRepository;
 import com.spblue4422.kumarket.apis.users.UserService;
 import com.spblue4422.kumarket.dto.posts.*;
 import com.spblue4422.kumarket.entity.Post;

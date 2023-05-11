@@ -13,7 +13,7 @@ public class BookmarkController {
 		this.bookmarkService = bookmarkService;
 	}
 
-	@PostMapping("/add")
+	@PostMapping("/addMark")
 	public ResponseEntity<?> addBookmark(@RequestBody() Long postId) {
 		try {
 			return null;
@@ -22,7 +22,7 @@ public class BookmarkController {
 		}
 	}
 
-	@DeleteMapping("/remove/{postId}")
+	@DeleteMapping("/removeMark/{postId}")
 	public ResponseEntity<?> removeBookmark(@RequestParam("postId") Long postId) {
 		try {
 			return null;

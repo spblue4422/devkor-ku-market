@@ -26,7 +26,7 @@ public class PostPhotoService {
 				.savedName(savedImage.getSavedName())
 				.originalName(savedImage.getOriginalName())
 				.savedPath(savedImage.getSavedPath())
-				.order(order)
+				.photoOrder(order)
 				.post(postData)
 				.build();
 

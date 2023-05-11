@@ -19,7 +19,7 @@ public class PostController {
 		this.postService = postService;
 	}
 
-	@GetMapping("")
+	@GetMapping("/all")
 	public ResponseEntity<?> getAllPosts() {
 		try {
 			PostListResponseDto resData = postService.findAllPosts();
@@ -41,7 +41,7 @@ public class PostController {
 		}
 	}
 
-	@PostMapping("/add")
+	@PostMapping("/addPost")
 	public ResponseEntity<?> addPost(@RequestPart(value = "postData") SavePostRequestDto req, @RequestPart(value = "images") List<MultipartFile> images) {
 		try {
 			Long resData = postService.insertPost(req, images, "spblue4422");
@@ -52,7 +52,7 @@ public class PostController {
 		}
 	}
 
-	@PatchMapping("/modify/{postId}")
+	@PatchMapping("/modifyPost/{postId}")
 	public ResponseEntity<?> modifyPost(@RequestPart(value = "postId") Long postId, @RequestPart(value = "postData") SavePostRequestDto req, @RequestPart(value = "images") List<MultipartFile> images) {
 		try {
 			Long resData = postService.updatePost(postId, req, images, "spblue4422");
@@ -63,7 +63,7 @@ public class PostController {
 		}
 	}
 
-	@DeleteMapping("/delete/{postId}")
+	@DeleteMapping("/removePost/{postId}")
 	public ResponseEntity<?> removePost(@RequestParam("postId") Long postId) {
 		try {
 			Long resData = postService.deletePost(postId, "spblue4422");

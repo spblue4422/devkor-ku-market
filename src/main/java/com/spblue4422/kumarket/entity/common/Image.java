@@ -1,7 +1,6 @@
 package com.spblue4422.kumarket.entity.common;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
