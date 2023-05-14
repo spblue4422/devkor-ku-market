@@ -77,7 +77,7 @@ public class Post extends BaseEntity {
 		this.postPhotoList.clear();
 	}
 
-	public PostResponseDto toPostResponseDto() {
+	public PostResponseDto toPostResponseDto(Boolean isBookmarked) {
 		return PostResponseDto
 				.builder()
 				.postId(postId)
@@ -90,6 +90,7 @@ public class Post extends BaseEntity {
 				.userId(user.getUserId())
 				.userName(user.getUserName())
 				.likes(user.getLikes())
+				.isBookmarked(isBookmarked)
 				.build();
 	}
 

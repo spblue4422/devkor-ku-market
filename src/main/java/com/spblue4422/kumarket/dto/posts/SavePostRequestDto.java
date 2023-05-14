@@ -13,11 +13,11 @@ public class SavePostRequestDto {
 	private String title;
 	private String description;
 	private Integer price;
-	private Integer viewCount;
 	private String status;
 
 	public Post toInsertPostEntity(User userData) {
 		return Post.builder()
+				.user(userData)
 				.category(category)
 				.title(title)
 				.description(description)

@@ -15,14 +15,14 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public MyProfileResponseDto getMyProfile(Long userId) {
-		User userData = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
+	public MyProfileResponseDto getMyProfile(String userName) {
+		User userData = findUserByUserName(userName);
 
 		return userData.toMyProfileResponseDto();
 	}
 
-	public UserProfileResponseDto getOthersProfile(Long userId) {
-		User userData = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
+	public UserProfileResponseDto getOthersProfile(String userName) {
+		User userData = findUserByUserName(userName);
 
 		return userData.toUserProfileResponseDto();
 	}
@@ -32,7 +32,7 @@ public class UserService {
 	}
 
 	public User findUserByUserName(String userName) {
-		return userRepository.findUserByUserNameEquals(userName).orElseThrow(() -> new RuntimeException());
+		return userRepository.findByUserNameEquals(userName).orElseThrow(() -> new RuntimeException());
 	}
 
 	public Boolean isUserExistsByUserName(String userName) {

@@ -21,4 +21,6 @@ public class PostResponseDto {
 	private Long userId;
 	private String userName;
 	private Integer likes;
+
+	private Boolean isBookmarked;
 }

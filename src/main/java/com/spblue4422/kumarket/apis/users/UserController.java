@@ -1,15 +1,13 @@
 package com.spblue4422.kumarket.apis.users;
 
-import com.spblue4422.kumarket.dto.BasicResponseDto;
 import com.spblue4422.kumarket.dto.users.MyProfileResponseDto;
 import com.spblue4422.kumarket.dto.users.UserProfileResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/users")
+@RestController()
+@RequestMapping("/users")
 public class UserController {
 	private final UserService userService;
 	@Autowired
@@ -18,18 +16,18 @@ public class UserController {
 	}
 
 	@GetMapping("/my")
-	public ResponseEntity<?> getMyProfile(Long userId) {
+	public ResponseEntity<?> getMyProfile() {
 		try {
-			MyProfileResponseDto resData = userService.getMyProfile(userId);
+			MyProfileResponseDto resData = userService.getMyProfile("spblue4422");
 
-			return ResponseEntity.ok().body(resData);
+			return ResponseEntity.ok(resData);
 		} catch	(Exception ex) {
 			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 
 	@GetMapping("/{userId}")
-	public ResponseEntity<?> getOthersProfile(@RequestParam("userId") Long userId) {
+	public ResponseEntity<?> getOthersProfile(@PathVariable("userId") String userId) {
 		try {
 			UserProfileResponseDto resData = userService.getOthersProfile(userId);
 

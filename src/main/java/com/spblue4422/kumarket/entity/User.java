@@ -39,8 +39,16 @@ public class User extends BaseEntity {
 	@NotNull()
 	private Integer likes;
 
-//	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-//	private List<Bookmark> bookmarkList;
+	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<Bookmark> bookmarkList;
+
+	public void addBookmarkToList(Bookmark bookmark) {
+		this.bookmarkList.add(bookmark);
+	}
+
+	public Boolean removeBookmarkFromList(Bookmark bookmark) {
+		return this.bookmarkList.remove(bookmark);
+	}
 
 	public UserProfileResponseDto toUserProfileResponseDto() {
 		return UserProfileResponseDto

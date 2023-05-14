@@ -1,8 +1,11 @@
 package com.spblue4422.kumarket.apis.posts;
 
+import com.spblue4422.kumarket.apis.bookmarks.BookmarkRepository;
+import com.spblue4422.kumarket.apis.bookmarks.BookmarkService;
 import com.spblue4422.kumarket.apis.posts.photos.PostPhotoService;
 import com.spblue4422.kumarket.apis.users.UserService;
 import com.spblue4422.kumarket.dto.posts.*;
+import com.spblue4422.kumarket.entity.Bookmark;
 import com.spblue4422.kumarket.entity.Post;
 import com.spblue4422.kumarket.entity.PostPhoto;
 import com.spblue4422.kumarket.entity.User;
@@ -17,19 +20,22 @@ import java.util.List;
 @Service
 public class PostService {
 	private final PostRepository postRepository;
+	private final BookmarkRepository bookmarkRepository;
 	private final UserService userService;
 	private final PostPhotoService postPhotoService;
 
 	@Autowired
-	public PostService(PostRepository postRepository, UserService userService, PostPhotoService postPhotoService) {
+	public PostService(PostRepository postRepository, BookmarkRepository bookmarkRepository, UserService userService, PostPhotoService postPhotoService) {
 		this.postRepository = postRepository;
+		this.bookmarkRepository = bookmarkRepository;
 		this.userService = userService;
 		this.postPhotoService = postPhotoService;
+
 	}
 
-	public PostListResponseDto findAllPosts() {
+	public PostListResponseDto getAllPosts() {
 		List<PostListItemDto> itemList = new ArrayList<>();
-		List<Post> postDataList = this.postRepository.findAll();
+		List<Post> postDataList = this.postRepository.findAllByDeletedAtIsNull();
 
 		for(Post postData: postDataList) {
 			PostListItemDto postListItem = postData.toPostListItemDto();
@@ -42,61 +48,99 @@ public class PostService {
 				.build();
 	}
 
-	public PostResponseDto getPostDetail(Long postId) {
-		Post postData = this.findPostByPostId(postId);
+	public PostListResponseDto getAllBookmarkedPosts(String userName) {
+		User userData = userService.findUserByUserName(userName);
+		List<PostListItemDto> itemList = new ArrayList<>();
+
+		List<Bookmark> bookmarkDataList = userData.getBookmarkList();
+
+		for(Bookmark bookmarkData: bookmarkDataList) {
+			Long postId = bookmarkData.getPost().getPostId();
+
+			Post postData = postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
+			itemList.add(postData.toPostListItemDto());
+		}
+
+//		List<Post> postDataList = postRepository.findAllPostsWithBookmarked(userData.getUserId());
+//
+//		for(Post postData: postDataList) {
+//			PostListItemDto postListItem = postData.toPostListItemDto();
+//			itemList.add(postListItem);
+//		}
+
+		return PostListResponseDto.builder()
+				.postList(itemList)
+				.count(itemList.size())
+				.build();
+	}
+
+	public PostResponseDto getPostDetail(Long postId, String userName) {
+		User userData = userService.findUserByUserName(userName);
+		Post postData = findPostByPostId(postId);
 		postData.raiseViewCount();
 
-		return postRepository.save(postData).toPostResponseDto();
+		Bookmark bookmarkData = bookmarkRepository.findBookmarkByUserIdAndPostId(userData.getUserId(), postId).orElse(null);
+		if(bookmarkData != null) {
+			return postRepository.save(postData).toPostResponseDto(true);
+		} else {
+			return postRepository.save(postData).toPostResponseDto(false);
+		}
 	}
 
 	public Long insertPost(SavePostRequestDto req, List<MultipartFile> photos, String userName) throws IOException {
 		User userData = userService.findUserByUserName(userName);
-		Post postData = postRepository.save(req.toInsertPostEntity(userData));
+		Post newPost = postRepository.save(req.toInsertPostEntity(userData));
 
 		for(MultipartFile photo: photos) {
-			PostPhoto photoData = postPhotoService.insertPostPhoto(photo, postData, photos.indexOf(photo));
-			postData.addPhotoToList(photoData);
+			if(photo.isEmpty()) continue;
+
+			PostPhoto photoData = postPhotoService.insertPostPhoto(photo, newPost, photos.indexOf(photo));
+			newPost.addPhotoToList(photoData);
 
 			if(photos.indexOf(photo) == 0) {
-				postData.setThumbnailUrl(photoData.getSavedPath());
+				newPost.setThumbnailUrl(photoData.getSavedPath());
 			}
 		}
 
-		return postRepository.save(postData).getPostId();
+		return postRepository.save(newPost).getPostId();
 	}
 
 	public Long updatePost(Long postId, SavePostRequestDto req, List<MultipartFile> photos, String userName) throws IOException {
-		Post prevPostData = findPostByPostId(postId);
+		Post postData = findPostByPostId(postId);
+		String dataUserName = postData.getUser().getUserName();
 
-		if(!prevPostData.getUser().getUserName().equals(userName)) {
+		if(!dataUserName.equals(userName)) {
 			throw new RuntimeException("본인의 게시물이 아님");
 		}
 
-		Post postData = req.toUpdatePostEntity(prevPostData);
+		Post newPost = req.toUpdatePostEntity(postData);
 
-		for (PostPhoto postPhoto: postData.getPostPhotoList())
+		for (PostPhoto postPhoto: newPost.getPostPhotoList())
 		{
 			postPhotoService.deletePostPhoto(postPhoto);
 		}
 
-		postData.emptyPhotoList();
+		newPost.emptyPhotoList();
 
 		for(MultipartFile photo: photos) {
-			PostPhoto photoData = postPhotoService.insertPostPhoto(photo, postData, photos.indexOf(photo));
-			postData.addPhotoToList(photoData);
+			if(photo.isEmpty()) continue;
+
+			PostPhoto photoData = postPhotoService.insertPostPhoto(photo, newPost, photos.indexOf(photo));
+			newPost.addPhotoToList(photoData);
 
 			if(photos.indexOf(photo) == 0) {
-				postData.setThumbnailUrl(photoData.getSavedPath());
+				newPost.setThumbnailUrl(photoData.getSavedPath());
 			}
 		}
 
-		return postRepository.save(postData).getPostId();
+		return postRepository.save(newPost).getPostId();
 	}
 
 	public Long deletePost(Long postId, String userName) {
 		Post postData = findPostByPostId(postId);
+		String dataUserName = postData.getUser().getUserName();
 
-		if(!postData.getUser().getUserName().equals(userName)) {
+		if(!dataUserName.equals(userName)) {
 			throw new RuntimeException("본인의 게시물이 아님");
 		}
 
@@ -106,7 +150,7 @@ public class PostService {
 	}
 
 	public Post findPostByPostId(Long postId) {
-		return postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
+		return postRepository.findByPostIdAndDeletedAtIsNull(postId).orElseThrow(() -> new RuntimeException());
 	}
 
 	public Boolean isPostExistsByPostId(Long postId) {

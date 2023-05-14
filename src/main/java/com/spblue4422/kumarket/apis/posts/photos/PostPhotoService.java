@@ -21,7 +21,7 @@ public class PostPhotoService {
 
 	public PostPhoto insertPostPhoto(MultipartFile photo, Post postData, Integer order) throws IOException {
 		ImageInfoDto savedImage = imageService.saveFile(photo, "");
-		PostPhoto photoData = PostPhoto
+		PostPhoto newPhoto = PostPhoto
 				.builder()
 				.savedName(savedImage.getSavedName())
 				.originalName(savedImage.getOriginalName())
@@ -30,7 +30,7 @@ public class PostPhotoService {
 				.post(postData)
 				.build();
 
-		return this.postPhotoRepository.save(photoData);
+		return this.postPhotoRepository.save(newPhoto);
 	}
 
 	public void deletePostPhoto(PostPhoto photo) {

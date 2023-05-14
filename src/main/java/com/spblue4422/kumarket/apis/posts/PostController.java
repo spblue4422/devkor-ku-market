@@ -10,7 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@RestController("/posts")
+@RestController()
+@RequestMapping("/posts")
 public class PostController {
 	private final PostService postService;
 
@@ -22,7 +23,18 @@ public class PostController {
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllPosts() {
 		try {
-			PostListResponseDto resData = postService.findAllPosts();
+			PostListResponseDto resData = postService.getAllPosts();
+
+			return ResponseEntity.ok().body(resData);
+		} catch(Exception ex) {
+			return ResponseEntity.internalServerError().body(ex.getMessage());
+		}
+	}
+
+	@GetMapping("/bookmarked")
+	public ResponseEntity<?> getAllBookmarkedPosts() {
+		try {
+			PostListResponseDto resData = postService.getAllBookmarkedPosts("spblue4422");
 
 			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
@@ -31,9 +43,9 @@ public class PostController {
 	}
 
 	@GetMapping("/{postId}")
-	public ResponseEntity<?> getPostByPostId(@RequestParam("postId") Long postId) {
+	public ResponseEntity<?> getPostByPostId(@PathVariable("postId") Long postId) {
 		try{
-			PostResponseDto resData = postService.getPostDetail(postId);
+			PostResponseDto resData = postService.getPostDetail(postId, "spblue4422");
 
 			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
@@ -53,22 +65,22 @@ public class PostController {
 	}
 
 	@PatchMapping("/modifyPost/{postId}")
-	public ResponseEntity<?> modifyPost(@RequestPart(value = "postId") Long postId, @RequestPart(value = "postData") SavePostRequestDto req, @RequestPart(value = "images") List<MultipartFile> images) {
+	public ResponseEntity<?> modifyPost(@PathVariable(value = "postId") Long postId, @RequestPart(value = "postData") SavePostRequestDto req, @RequestPart(value = "images") List<MultipartFile> images) {
 		try {
 			Long resData = postService.updatePost(postId, req, images, "spblue4422");
 
-			return ResponseEntity.ok().body(null);
+			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
 			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 
 	@DeleteMapping("/removePost/{postId}")
-	public ResponseEntity<?> removePost(@RequestParam("postId") Long postId) {
+	public ResponseEntity<?> removePost(@PathVariable("postId") Long postId) {
 		try {
 			Long resData = postService.deletePost(postId, "spblue4422");
 
-			return ResponseEntity.ok().body(null);
+			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
 			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}

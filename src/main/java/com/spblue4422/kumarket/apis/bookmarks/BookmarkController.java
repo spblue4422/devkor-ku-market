@@ -1,10 +1,12 @@
 package com.spblue4422.kumarket.apis.bookmarks;
 
+import com.spblue4422.kumarket.apis.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/bookmarks")
+@RestController()
+@RequestMapping("/bookmarks")
 public class BookmarkController {
 	private final BookmarkService bookmarkService;
 
@@ -16,18 +18,22 @@ public class BookmarkController {
 	@PostMapping("/addMark")
 	public ResponseEntity<?> addBookmark(@RequestBody() Long postId) {
 		try {
-			return null;
+			Long resData = bookmarkService.insertBookmark(postId, "spblue4422");
+
+			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
-			return null;
+			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 
 	@DeleteMapping("/removeMark/{postId}")
-	public ResponseEntity<?> removeBookmark(@RequestParam("postId") Long postId) {
+	public ResponseEntity<?> removeBookmark(@PathVariable("postId") Long postId) {
 		try {
-			return null;
+			Long resData = bookmarkService.deleteBookmark(postId, "spblue4422");
+
+			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
-			return null;
+			return ResponseEntity.internalServerError().body(ex.getMessage());
 		}
 	}
 }
