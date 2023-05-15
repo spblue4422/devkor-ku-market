@@ -5,11 +5,9 @@ import com.spblue4422.kumarket.apis.bookmarks.BookmarkService;
 import com.spblue4422.kumarket.apis.posts.photos.PostPhotoService;
 import com.spblue4422.kumarket.apis.users.UserService;
 import com.spblue4422.kumarket.dto.posts.*;
-import com.spblue4422.kumarket.entity.Bookmark;
-import com.spblue4422.kumarket.entity.Post;
-import com.spblue4422.kumarket.entity.PostPhoto;
-import com.spblue4422.kumarket.entity.User;
+import com.spblue4422.kumarket.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,9 +31,9 @@ public class PostService {
 
 	}
 
-	public PostListResponseDto getAllPosts() {
+	public PostListResponseDto getAllPosts(Pageable pageable) {
 		List<PostListItemDto> itemList = new ArrayList<>();
-		List<Post> postDataList = this.postRepository.findAllByDeletedAtIsNull();
+		List<Post> postDataList = this.postRepository.findAllByDeletedAtNullOrderByCreatedAtDesc(pageable);
 
 		for(Post postData: postDataList) {
 			PostListItemDto postListItem = postData.toPostListItemDto();
@@ -59,14 +57,9 @@ public class PostService {
 
 			Post postData = postRepository.findById(postId).orElseThrow(() -> new RuntimeException());
 			itemList.add(postData.toPostListItemDto());
+			
+			//paging을 한다면 어느 걸 기준으로 해야할지도 정해야할듯
 		}
-
-//		List<Post> postDataList = postRepository.findAllPostsWithBookmarked(userData.getUserId());
-//
-//		for(Post postData: postDataList) {
-//			PostListItemDto postListItem = postData.toPostListItemDto();
-//			itemList.add(postListItem);
-//		}
 
 		return PostListResponseDto.builder()
 				.postList(itemList)
@@ -150,7 +143,7 @@ public class PostService {
 	}
 
 	public Post findPostByPostId(Long postId) {
-		return postRepository.findByPostIdAndDeletedAtIsNull(postId).orElseThrow(() -> new RuntimeException());
+		return postRepository.findByPostIdAndDeletedAtNull(postId).orElseThrow(() -> new RuntimeException());
 	}
 
 	public Boolean isPostExistsByPostId(Long postId) {

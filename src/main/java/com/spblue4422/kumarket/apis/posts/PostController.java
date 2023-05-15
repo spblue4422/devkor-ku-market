@@ -4,6 +4,7 @@ import com.spblue4422.kumarket.dto.posts.SavePostRequestDto;
 import com.spblue4422.kumarket.dto.posts.PostListResponseDto;
 import com.spblue4422.kumarket.dto.posts.PostResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,10 +21,10 @@ public class PostController {
 		this.postService = postService;
 	}
 
-	@GetMapping("/all")
-	public ResponseEntity<?> getAllPosts() {
+	@GetMapping("/list/all")
+	public ResponseEntity<?> getAllPosts(Pageable pageable) {
 		try {
-			PostListResponseDto resData = postService.getAllPosts();
+			PostListResponseDto resData = postService.getAllPosts(pageable);
 
 			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
@@ -31,7 +32,7 @@ public class PostController {
 		}
 	}
 
-	@GetMapping("/bookmarked")
+	@GetMapping("/list/bookmarked")
 	public ResponseEntity<?> getAllBookmarkedPosts() {
 		try {
 			PostListResponseDto resData = postService.getAllBookmarkedPosts("spblue4422");
