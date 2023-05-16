@@ -12,13 +12,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BookmarkService {
+	private final UserRepository userRepository;
 	private final BookmarkRepository bookmarkRepository;
 
 	private final UserService userService;
 	private final PostService postService;
 
 	@Autowired
-	public BookmarkService(BookmarkRepository bookmarkRepository, UserService userService, PostService postService) {
+	public BookmarkService(UserRepository userRepository, BookmarkRepository bookmarkRepository, UserService userService, PostService postService) {
+		this.userRepository = userRepository;
 		this.bookmarkRepository = bookmarkRepository;
 		this.userService = userService;
 		this.postService = postService;
@@ -39,7 +41,7 @@ public class BookmarkService {
 				.build();
 
 		Bookmark savedBookmark = bookmarkRepository.save(newBookmark);
-		userData.addBookmarkToList(savedBookmark);
+//		userData.addBookmarkToList(savedBookmark);
 
 		return savedBookmark.getBookmarkId();
 	}
@@ -54,8 +56,9 @@ public class BookmarkService {
 			throw new RuntimeException();
 		}
 
-		userData.removeBookmarkFromList(bookmarkData);
 		bookmarkRepository.delete(bookmarkData);
+
+//		userData.removeBookmarkFromList(bookmarkData);
 
 		return bookmarkData.getBookmarkId();
 	}

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController()
 @RequestMapping("/bookmarks")
 public class BookmarkController {
@@ -16,9 +18,9 @@ public class BookmarkController {
 	}
 
 	@PostMapping("/addMark")
-	public ResponseEntity<?> addBookmark(@RequestBody() Long postId) {
+	public ResponseEntity<?> addBookmark(@RequestBody Map<String, Long> postIdMap) {
 		try {
-			Long resData = bookmarkService.insertBookmark(postId, "spblue4422");
+			Long resData = bookmarkService.insertBookmark(postIdMap.get("postId"), "test1");
 
 			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {
@@ -29,7 +31,7 @@ public class BookmarkController {
 	@DeleteMapping("/removeMark/{postId}")
 	public ResponseEntity<?> removeBookmark(@PathVariable("postId") Long postId) {
 		try {
-			Long resData = bookmarkService.deleteBookmark(postId, "spblue4422");
+			Long resData = bookmarkService.deleteBookmark(postId, "test1");
 
 			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {

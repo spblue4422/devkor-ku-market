@@ -32,7 +32,7 @@ public class UserService {
 	}
 
 	public User findUserByUserName(String userName) {
-		return userRepository.findByUserNameEquals(userName).orElseThrow(() -> new RuntimeException());
+		return userRepository.findByUserNameEqualsAndDeletedAtNull(userName).orElseThrow(() -> new RuntimeException());
 	}
 
 	public Boolean isUserExistsByUserName(String userName) {

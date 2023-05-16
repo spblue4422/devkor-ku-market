@@ -18,11 +18,11 @@ public class Bookmark extends BaseEntity {
 	@Column(name="bookmarkId")
 	private Long bookmarkId;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name="bookmark_user")
 	private User user;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name = "bookmark_post")
 	private Post post;
 }

@@ -26,7 +26,7 @@ public class Post extends BaseEntity {
 	@Column(name = "postId")
 	private Long postId;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name="post_user")
 	private User user;
 	//enum

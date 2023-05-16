@@ -35,7 +35,7 @@ public class PostController {
 	@GetMapping("/list/bookmarked")
 	public ResponseEntity<?> getAllBookmarkedPosts() {
 		try {
-			PostListResponseDto resData = postService.getAllBookmarkedPosts("spblue4422");
+			PostListResponseDto resData = postService.getAllBookmarkedPosts("test1");
 
 			return ResponseEntity.ok().body(resData);
 		} catch(Exception ex) {

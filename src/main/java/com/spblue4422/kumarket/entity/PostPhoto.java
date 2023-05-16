@@ -24,7 +24,7 @@ public class PostPhoto extends Image {
 	@Column(name = "photoOrder")
 	private Integer photoOrder;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name="postPhoto_post")
 	private Post post;
 }

@@ -46,8 +46,8 @@ public class User extends BaseEntity {
 		this.bookmarkList.add(bookmark);
 	}
 
-	public Boolean removeBookmarkFromList(Bookmark bookmark) {
-		return this.bookmarkList.remove(bookmark);
+	public void removeBookmarkFromList(Bookmark bookmark) {
+		this.bookmarkList.remove(bookmark);
 	}
 
 	public UserProfileResponseDto toUserProfileResponseDto() {
